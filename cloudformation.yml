@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Desplegando infraestuctura MeLi_SEC'
+
+############################## Parameters ####################################################
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro ## Capa free
+
+  ImageId:
+    Description: EC2 Instance AMI
+    Type: AWS::EC2::Image::Id
+    Default: ami-09a41e26df464c548 ## Debian 
+
+  VpcId:
+    Description: The VPC of the worker instances
+    Type: AWS::EC2::VPC::Id
+
+  Subnet:
+    Description: The subnets where workers can be created.
+    Type: AWS::EC2::Subnet::Id
+  
+  DisableApiTermination:
+     Description: desible or enable termination
+     Type: String
+  
+  DBUsername:
+    NoEcho: 'true'
+    Description: Username for database access
+    Type: String
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+    Default: Carlos_MeLi_Sec
+  DBPassword:
+    NoEcho: 'true'
+    Description: Password database access
+    Type: String
+    ConstraintDescription: must contain only alphanumeric characters.
+    Default: Carlos_MeLi_Sec
+
+######################################## Resources ######################################
+Resources:
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: securityGroup-MeLi_Sec
+      GroupDescription: Allow conection to client
+      VpcId:
+        Ref: VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: any
+        ToPort: 8080
+        CidrIp: 0.0.0.0/0
+
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - InstanceSecurityGroup
+      - ManagedInstanceRole
+      - DataBases
+    Properties:
+      SubnetId: !Ref Subnet
+      DisableApiTermination: !Ref DisableApiTermination
+      ImageId: 
+        Ref: ImageId
+      Tags:
+        -
+          Key: Name
+          Value: EC2-MeLi_Sec
+      SecurityGroupIds:
+      - Ref: InstanceSecurityGroup
+      InstanceType: 
+        Ref: InstanceType
+      IamInstanceProfile: !Ref ManagedInstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+           <powershell>
+              #Comands./main.py
+              crontab * * * * * ./main.py
+              mkdir 
+           </powershell>
+           <persist>true</persist>
+           <runAsLocalSystem>true</runAsLocalSystem>
+
+  ManagedInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ssm.amazonaws.com
+            - ec2.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Path: "/"
+
+  ManagedInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref ManagedInstanceRole
+      InstanceProfileName: ProfileMeLi_Sec
+
+ 
+
+Outputs:
+  JDBCConnectionString:
+    Description: JDBC connection string for the database
+    Value: !Join
+      - ''
+      - - 'jdbc:'
+        - !Ref DataBases
+        - '://'
+        - !GetAtt
+          - DataBases
+          - Endpoint.Address
+        - ':'
+        - !GetAtt
+          - DataBases
+          - Endpoint.Port
+        - /
+        #- !Ref DBName
