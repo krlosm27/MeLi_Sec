@@ -1,9 +1,0 @@
-{
-    "ip_address": "10.0.10.1",
-    "cpuinfo": "cpuinf",
-    "processes": "procss",
-    "sessions": "users",
-    "os": "os",
-    "version-os": "ver_os",
-    "date": "date"
-}
