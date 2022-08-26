@@ -25,18 +25,6 @@ Description: 'Desplegando infraestuctura MeLi_SEC'
      Description: desible or enable termination
      Type: String
   
-  DBUsername:
-    NoEcho: 'true'
-    Description: Username for database access
-    Type: String
-    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
-    Default: Carlos_MeLi_Sec
-  DBPassword:
-    NoEcho: 'true'
-    Description: Password database access
-    Type: String
-    ConstraintDescription: must contain only alphanumeric characters.
-    Default: Carlos_MeLi_Sec
 
 ######################################## Resources ######################################
 Resources:
@@ -60,7 +48,6 @@ Resources:
     DependsOn:
       - InstanceSecurityGroup
       - ManagedInstanceRole
-      - DataBases
     Properties:
       SubnetId: !Ref Subnet
       DisableApiTermination: !Ref DisableApiTermination
@@ -109,22 +96,4 @@ Resources:
       - !Ref ManagedInstanceRole
       InstanceProfileName: ProfileMeLi_Sec
 
- 
-
-Outputs:
-  JDBCConnectionString:
-    Description: JDBC connection string for the database
-    Value: !Join
-      - ''
-      - - 'jdbc:'
-        - !Ref DataBases
-        - '://'
-        - !GetAtt
-          - DataBases
-          - Endpoint.Address
-        - ':'
-        - !GetAtt
-          - DataBases
-          - Endpoint.Port
-        - /
-        #- !Ref DBName
+  
