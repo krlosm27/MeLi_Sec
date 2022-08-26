@@ -44,7 +44,7 @@ jobs:
     - name: Deploy to AWS CloudFormation
       uses: aws-actions/aws-cloudformation-github-deploy@v1
       with:
-        name: Infraestructure_MeliSec
+        name: InfraestructureMeliSec
         template: cloudformationEc2.yml
         no-fail-on-empty-changeset: "1"
         parameter-overrides: "EC2InstanceType=t2.micro"
