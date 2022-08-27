@@ -42,7 +42,7 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: securityGroup-Jose
+      GroupName: securityGroup-Carlos
       GroupDescription: Allow conection to client
       VpcId:
         Ref: VpcId
