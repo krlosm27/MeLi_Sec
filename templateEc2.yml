@@ -32,7 +32,7 @@ Parameters:
 
   DisableApiTermination:
      Description: desible or enable termination
-     Type: Boolean
+     Type: String
      Default: false
   
 
@@ -75,7 +75,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          
+
 
   ManagedInstanceRole:
     Type: AWS::IAM::Role
