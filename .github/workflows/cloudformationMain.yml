@@ -42,5 +42,6 @@ jobs:
       with:
         name: InfraestructureMeliSec
         template: templateEc2.yml
+        template: templateSG.yml
         no-fail-on-empty-changeset: "1"
         #parameter-overrides: "EC2InstanceType=t2.micro"
