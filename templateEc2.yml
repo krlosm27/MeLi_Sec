@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Desplegando EC2 y RDS'
+Description: 'Desplegando EC2'
 
 ############################## Parameters ####################################################
 
@@ -23,15 +23,17 @@ Parameters:
   VpcId:
     Description: The VPC of the worker instances
     Type: AWS::EC2::VPC::Id
+    Default: vpc-0b5344304b52a4cd8
 
   Subnet:
     Description: The subnets where workers can be created.
     Type: AWS::EC2::Subnet::Id
-  
+    Default: subnet-03f8eb5e3b7805d37 
+
   DisableApiTermination:
      Description: desible or enable termination
-     Type: String
-  
+     Type: Boolean
+     Default: false
   
 
 ######################################## Resources ######################################
@@ -72,13 +74,8 @@ Resources:
       IamInstanceProfile: !Ref ManagedInstanceProfile
       UserData:
         Fn::Base64: !Sub |
-           <powershell>
-              #Comands./main.py
-              crontab * * * * * ./main.py
-              
-           </powershell>
-           <persist>true</persist>
-           <runAsLocalSystem>true</runAsLocalSystem>
+          #!/bin/bash
+          
 
   ManagedInstanceRole:
     Type: AWS::IAM::Role
