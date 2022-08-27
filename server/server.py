@@ -1,6 +1,15 @@
 from flask import Flask, request
 import json
 import pymongo
+from bson import json_util
+
+MONGODB_CONNECTION_STRING='mongodb://localhost:27017/'
+MONGODB_DATABASE_NAME='dbMeliSec'
+MONGODB_COLLECTION='monitoring'
+
+dbConection = pymongo.MongoClient(MONGODB_CONNECTION_STRING)
+meliSecDb = dbConection[MONGODB_DATABASE_NAME]
+collection = meliSecDb[MONGODB_COLLECTION]
 
 app = Flask(__name__)
 
@@ -8,26 +17,14 @@ app = Flask(__name__)
 def hello_world():
     return "<p> Prueba </p>"
 
-
-
-dbConection = pymongo.MongoClient("mongodb://localhost:27017")## variable para la conexion
-monitoringDb = dbConection["dbMeliSec"] #crear la base de datos
-collection = monitoringDb["comandos"] #collection
-
 @app.route("/servers/monitoring", methods=['POST'])
 def servers_monitoring():
     payload = request.json
-    #dbConection = pymongo.MongoClient("mongodb://localhost:27017")
-    #register = collection.insert_one(payload)
+    print(type(payload))
+    json_data = json.loads(json_util.dumps(payload))
+    print(type(json_data))
+    register = collection.insert_one(json_data)
     return payload
-
-#dbConection = pymongo.MongoClient("mongodb://localhost:27017")## variable para la conexion
-#monitoringDb = dbConection["dbMeliSec"] #crear la base de datos
-#collection = monitoringDb["comandos"] #collection
-##comando = {"name":"Alex", "apellido":"mijito"}
-#register = collection.insert_one(payload)
-##print (register)
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='8080')
