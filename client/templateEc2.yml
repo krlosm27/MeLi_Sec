@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Desplegando EC2 y RDS'
+
+############################## Parameters ####################################################
+
+Parameters:
+
+  environment:
+    Description: Ambiente donde se despliega.
+    Type: String
+    Default: dev
+
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+
+  ImageId:
+    Description: EC2 Instance AMI
+    Type: AWS::EC2::Image::Id
+    Default: ami-02c27944e9187fdb0
+
+  VpcId:
+    Description: The VPC of the worker instances
+    Type: AWS::EC2::VPC::Id
+
+  Subnet:
+    Description: The subnets where workers can be created.
+    Type: AWS::EC2::Subnet::Id
+  
+  DisableApiTermination:
+     Description: desible or enable termination
+     Type: String
+  
+  
+
+######################################## Resources ######################################
+Resources:
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: securityGroup-Jose
+      GroupDescription: Allow conection to client
+      VpcId:
+        Ref: VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        CidrIp: 10.104.60.0/22
+
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - InstanceSecurityGroup
+      - ManagedInstanceRole
+    Properties:
+      SubnetId: !Ref Subnet
+      DisableApiTermination: !Ref DisableApiTermination
+      ImageId: 
+        Ref: ImageId
+      Tags:
+        -
+          Key: Name
+          Value: EC2-MeliSec
+      SecurityGroupIds:
+      - Ref: InstanceSecurityGroup
+      InstanceType: 
+        Ref: InstanceType
+      IamInstanceProfile: !Ref ManagedInstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+           <powershell>
+              #Comands./main.py
+              crontab * * * * * ./main.py
+              
+           </powershell>
+           <persist>true</persist>
+           <runAsLocalSystem>true</runAsLocalSystem>
+
+  ManagedInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ssm.amazonaws.com
+            - ec2.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Path: "/"
+
+  ManagedInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref ManagedInstanceRole
+      InstanceProfileName: ProfileCarlos
+
+  
+###############################################################
+

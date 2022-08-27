@@ -17,8 +17,8 @@ collection = monitoringDb["comandos"] #collection
 @app.route("/servers/monitoring", methods=['POST'])
 def servers_monitoring():
     payload = request.json
-    dbConection = pymongo.MongoClient("mongodb://localhost:27017")
-    register = collection.insert_one(payload)
+    #dbConection = pymongo.MongoClient("mongodb://localhost:27017")
+    #register = collection.insert_one(payload)
     return payload
 
 #dbConection = pymongo.MongoClient("mongodb://localhost:27017")## variable para la conexion
