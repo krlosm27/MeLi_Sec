@@ -48,9 +48,9 @@ Resources:
         Ref: VpcId
       SecurityGroupIngress:
       - IpProtocol: tcp
-        FromPort: 3306
-        ToPort: 3306
-        CidrIp: 10.104.60.0/22
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 181.131.193.74/32
 
 
   EC2Instance:
