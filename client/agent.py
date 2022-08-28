@@ -22,12 +22,10 @@ monitoring = {
     }
 }
 
-
 def monitoring_report(serverURL, jsonString):
     headers = {'Content-type': 'application/json'}
     resp = requests.post(serverURL, data=json.dumps(jsonString), headers=headers)
     print(resp.text)
-
 
 monitoring_report('http://192.168.1.11:8080/servers/monitoring', monitoring)
     
