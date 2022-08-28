@@ -90,6 +90,10 @@ Resources:
           sudo apt install docker-ce
           y
           sudo systemctl status docker
+          sudo apt install python3-pip
+          y
+          pip install Flask
+          sudo pip install pymongo
 
   ManagedInstanceRole:
     Type: AWS::IAM::Role
