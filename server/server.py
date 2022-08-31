@@ -4,7 +4,7 @@ import pymongo
 from bson import json_util
 import datetime
 
-MONGODB_CONNECTION_STRING='mongodb://localhost:27017/'
+MONGODB_CONNECTION_STRING='mongodb://root:example@mongo:27017/'
 MONGODB_DATABASE_NAME='dbMeliSec'
 MONGODB_COLLECTION='monitoring'
 
@@ -21,21 +21,28 @@ def hello_world():
 @app.route("/servers/monitoring", methods=['POST'])
 def servers_monitoring():
     payload = request.json
-    print(type(payload))
-    json_data = json.loads(json_util.dumps(payload)) 
-    register = collection.insert_one(json_data)
-    return(payload)
+    json_data = json.loads(json_util.dumps(payload))
+    json_data['createdAt'] = datetime.datetime.utcnow()
+    try:
+        register = collection.insert_one(json_data)
+        return jsonify(status_code=200, message="Succesfully registered")
+    except Exception as e:
+        print("An exception occurred ::", e)
+        return jsonify(status_code=500, message="An exception ocurred = {e}")
 
 @app.route("/servers/getMonitoring", methods=['GET'] )
 def get_monitoring():
-    dictn = {}
-    retrieves = collection.find().limit(10)
+    listn =[]
+    try:
+        retrieves = collection.find().limit(10)
+    except Exception as e:
+        print("An exception occurred ::", e)
+        return jsonify(status_code=500, message="Failed obtaining data from database")
+        
     for document in retrieves:
-        dictn.update(document)
-    jsonstring = json_util.dumps(dictn)
-    print(type(jsonstring))
-    return jsonify(jsonstring)
+        document = json_util.dumps(document)
+        listn.append(json.loads(document))
+    return jsonify(listn)
     
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port='8080')
-    
