@@ -14,10 +14,6 @@ collection = meliSecDb[MONGODB_COLLECTION]
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "<p> Prueba </p>"
-
 @app.route("/servers/monitoring", methods=['POST'])
 def servers_monitoring():
     payload = request.json
