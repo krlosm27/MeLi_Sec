@@ -94,6 +94,7 @@ Resources:
           y
           pip install Flask
           sudo pip install pymongo
+          bash
 
   ManagedInstanceRole:
     Type: AWS::IAM::Role
