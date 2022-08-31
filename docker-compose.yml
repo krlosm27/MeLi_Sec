@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+
+  server:
+    image: krlosm27/melisec-server:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./server.Dockerfile
+    ports:
+      - 8080:8080
+  
+  client-redhat:
+    image: krlosm27/melisec-client-redhat:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./client-redhat.Dockerfile
+
+  client-ubuntu:
+    image: krlosm27/melisec-client-ubuntu:latest
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./client-ubuntu.Dockerfile
