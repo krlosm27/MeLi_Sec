@@ -8,6 +8,9 @@ on:
         description: 'AWS Region'
         required: true
         default: 'us-east-1'
+      keypair:
+        description: 'SSH Key Pair'
+        default: 'MyKeyPair.pem'
 
 jobs:
   cluster:
