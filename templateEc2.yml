@@ -88,7 +88,6 @@ Resources:
           sudo systemctl status docker
           sudo apt install python3-pip -y      
           sudo apt-get install git -y
-          mkdir /tmp/
           cd /tmp/
           git clone https://github.com/krlosm27/MeLi_Sec.git
           sudo apt update
@@ -96,6 +95,8 @@ Resources:
           curl -s https://api.github.com/repos/docker/compose/releases/latest | grep browser_download_url  | grep docker-compose-linux-x86_64 | cut -d '"' -f 4 | wget -qi -
           chmod +x docker-compose-linux-x86_64
           sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+          cd /tmp/MeLi_Sec
+          docker-compose up -d
 
   ManagedInstanceRole:
     Type: AWS::IAM::Role
