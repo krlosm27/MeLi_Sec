@@ -88,8 +88,8 @@ Resources:
           sudo systemctl status docker
           sudo apt install python3-pip -y      
           sudo apt-get install git -y
-          mkdir /tmp/MeLi_Sec
-          cd /tmp/MeLi_Sec
+          mkdir /tmp/
+          cd /tmp/
           git clone https://github.com/krlosm27/MeLi_Sec.git
           sudo apt update
           sudo apt install -y curl wget
