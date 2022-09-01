@@ -4,7 +4,7 @@ import pymongo
 from bson import json_util
 import datetime
 
-MONGODB_CONNECTION_STRING='mongodb://root:example@mongo:27017/'
+MONGODB_CONNECTION_STRING='mongodb://MeLiSec:M3L1S3c*2022@mongo:27017/'
 MONGODB_DATABASE_NAME='dbMeliSec'
 MONGODB_COLLECTION='monitoring'
 

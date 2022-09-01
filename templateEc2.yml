@@ -51,7 +51,10 @@ Resources:
         FromPort: 22
         ToPort: 22
         CidrIp: 181.131.193.74/32
-
+        IpProtocol: tcp
+        FromPort: any
+        ToPort: 8080
+        CidrIp: 0.0.0.0/0
 
   EC2Instance:
     Type: AWS::EC2::Instance
@@ -72,6 +75,7 @@ Resources:
       InstanceType: 
         Ref: InstanceType
       IamInstanceProfile: !Ref ManagedInstanceProfile
+      keypair: MyKeyPair
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -79,7 +83,24 @@ Resources:
           cd /tmp/ssm
           wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
           sudo dpkg -i amazon-ssm-agent.deb          
-         
+          sudo apt update
+          sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common -y
+          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+          sudo apt update
+          apt-cache policy docker-ce
+          sudo apt install docker-ce -y
+          sudo systemctl status docker
+          sudo apt install python3-pip -y      
+          sudo apt-get install git -y
+          mkdir /tmp/MeLi_Sec
+          cd /tmp/MeLi_Sec
+          git clone https://github.com/krlosm27/MeLi_Sec.git
+          sudo apt update
+          sudo apt install -y curl wget
+          curl -s https://api.github.com/repos/docker/compose/releases/latest | grep browser_download_url  | grep docker-compose-linux-x86_64 | cut -d '"' -f 4 | wget -qi -
+          chmod +x docker-compose-linux-x86_64
+          sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
 
   ManagedInstanceRole:
     Type: AWS::IAM::Role
