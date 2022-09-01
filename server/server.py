@@ -1,3 +1,4 @@
+from ssl import SSLContext
 from flask import Flask, request, jsonify
 import json
 import pymongo
@@ -41,4 +42,5 @@ def get_monitoring():
     return jsonify(listn)
     
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='8080')
+    #app.run(host='0.0.0.0', port='8080')
+    app.run(host='0.0.0.0', port='8080', ssl_context=("./cert/cert.cer", "./cert/privatekey.pem"))
