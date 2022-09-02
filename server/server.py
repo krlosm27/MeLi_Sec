@@ -1,4 +1,3 @@
-from ssl import SSLContext
 from flask import Flask, request, jsonify
 import json
 import pymongo
