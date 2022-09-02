@@ -4,4 +4,6 @@ COPY ./client /app/client
 WORKDIR /app/client
 RUN python3 -m ensurepip --upgrade
 RUN pip3 install -r requirements.txt
+RUN dnf install crontabs -y
+RUN crontab -l | { cat; echo “*/5 * * * * python3 agent.py"; } | crontab -
 CMD [ "sleep", "10000000" ]
