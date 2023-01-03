@@ -27,7 +27,7 @@ services:
       context: ./
       dockerfile: ./client-redhat.Dockerfile
       
-   rundeck:
+  rundeck:
     image: krlosm27/melisec-rundeck:latest
     restart: always
     build:
@@ -36,7 +36,6 @@ services:
     ports:
       - 4040:8080
   
-
   client-ubuntu:
     image: krlosm27/melisec-client-ubuntu:latest
     restart: always
