@@ -28,13 +28,17 @@ services:
       dockerfile: ./client-redhat.Dockerfile
       
   rundeck:
-    image: krlosm27/melisec-rundeck:latest
-    restart: always
-    build:
-      context: ./
-      dockerfile: ./rundeck.Dockerfile
+    rundeck:
+    image: rundeck/rundeck:SNAPSHOT
+    container_name: rundeck-example
     ports:
-      - 4040:8081
+      - '4444:4440'
+    environment:
+      RUNDECK_GRAILS_URL: 'http://localhost:4444'
+      RUNDECK_DATABASE_DRIVER: com.mysql.jdbc.Driver
+      RUNDECK_DATABASE_USERNAME: rundeck
+      RUNDECK_DATABASE_PASSWORD: '${DB_PASSWORD}'
+      RUNDECK_DATABASE_URL: 'jdbc:mysql://mysql/rundeck?autoReconnect=true&useSSL=false'
   
   client-ubuntu:
     image: krlosm27/melisec-client-ubuntu:latest
