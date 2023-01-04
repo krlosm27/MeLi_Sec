@@ -1,2 +1,16 @@
-FROM rundeck/rundeck:3.4.10-20220118
-CMD [ "sleep", "10000000" ]
+FROM rundeck/rundeck:SNAPSHOT 
+
+USER root
+
+# upgrade os
+RUN apt-get -y update && \
+   apt-get -y install \
+   software-properties-common 
+ 
+# install python
+RUN apt-get -y install python3-pip && \
+   pip3 install --upgrade pip
+
+RUN password rundeck:rundeck
+
+USER rundeck
