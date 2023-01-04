@@ -34,7 +34,7 @@ services:
       context: ./
       dockerfile: ./rundeck.Dockerfile
     ports:
-      - 4040:8080
+      - 4040:8081
   
   client-ubuntu:
     image: krlosm27/melisec-client-ubuntu:latest
