@@ -28,9 +28,10 @@ services:
       dockerfile: ./client-redhat.Dockerfile
       
   rundeck:
-    rundeck:
     image: rundeck/rundeck:SNAPSHOT
     container_name: rundeck-example
+    build:
+     context: ./
     ports:
       - '4444:4440'
     environment:
